@@ -1,0 +1,613 @@
+{
+  "escalation_line": "I completely understand, and I'm sorry for the trouble. Let me connect you with one of our specialists, who will personally call you back within 5 minutes to resolve this.",
+  "greeting": "Hi, thank you for calling Kartify Support, this is Vera. May I have your Order ID so I can help you with that?",
+  "entries": [
+    {
+      "id": "track_order",
+      "topic": "Orders & Delivery",
+      "priority": 1,
+      "order_specific": true,
+      "triggers": [
+        "where is my order",
+        "where is order",
+        "where is my package",
+        "track",
+        "tracking",
+        "order status",
+        "delivery status",
+        "not arrived",
+        "hasn t arrived",
+        "haven t received",
+        "not received",
+        "not delivered",
+        "kab aayega",
+        "kahan hai",
+        "ऑर्डर कहां",
+        "ऑर्डर कहाँ",
+        "ऑर्डर कहां",
+        "ऑर्डर कुठे",
+        "ऑर्डर कुठे आहे"
+      ],
+      "answer": "You can track your order with the Order ID in My Orders in the app. Standard delivery takes 3 to 7 business days, and express delivery in metro cities takes 1 to 2 business days.",
+      "answer_hi": "आप ऐप में My Orders में ऑर्डर आईडी से अपना ऑर्डर ट्रैक कर सकते हैं। सामान्य डिलीवरी में 3 से 7 कार्य दिवस लगते हैं, और मेट्रो शहरों में एक्सप्रेस डिलीवरी 1 से 2 कार्य दिवस में होती है।",
+      "answer_mr": "तुम्ही ॲपमधील My Orders मध्ये ऑर्डर आयडीने ऑर्डर ट्रॅक करू शकता. सामान्य डिलिव्हरीला 3 ते 7 कामकाजी दिवस लागतात, आणि मेट्रो शहरांमध्ये एक्सप्रेस डिलिव्हरी 1 ते 2 कामकाजी दिवसांत होते."
+    },
+    {
+      "id": "delay",
+      "topic": "Orders & Delivery",
+      "priority": 2,
+      "order_specific": true,
+      "triggers": [
+        "delayed",
+        "delay",
+        "late",
+        "taking too long",
+        "still waiting",
+        "bahut late"
+      ],
+      "answer": "I'm sorry about the delay. If your order is more than 7 business days late, you get a 100 rupee credit in your account. We also send SMS and app updates for delays caused by weather or regional restrictions."
+    },
+    {
+      "id": "cancel",
+      "topic": "Orders & Delivery",
+      "priority": 1,
+      "order_specific": true,
+      "triggers": [
+        "cancel",
+        "cancellation",
+        "cancel karna",
+        "कैंसल",
+        "रद्द",
+        "रद्द करा"
+      ],
+      "answer": "You can cancel for free any time before the order is shipped. Once it has shipped it can't be cancelled, but you can return it after delivery.",
+      "answer_hi": "शिप होने से पहले आप कभी भी मुफ़्त में ऑर्डर रद्द कर सकते हैं। शिप होने के बाद रद्द नहीं हो सकता, लेकिन डिलीवरी के बाद आप उसे वापस कर सकते हैं।",
+      "answer_mr": "ऑर्डर पाठवण्यापूर्वी तुम्ही केव्हाही मोफत रद्द करू शकता. पाठवल्यानंतर रद्द करता येत नाही, पण डिलिव्हरीनंतर परत करता येते."
+    },
+    {
+      "id": "express",
+      "topic": "Orders & Delivery",
+      "priority": 2,
+      "triggers": [
+        "express delivery",
+        "express",
+        "fast delivery",
+        "how fast",
+        "same day"
+      ],
+      "answer": "Express delivery takes 1 to 2 business days and is available in metro cities only. Standard delivery takes 3 to 7 business days."
+    },
+    {
+      "id": "courier_missed",
+      "topic": "Orders & Delivery",
+      "priority": 3,
+      "triggers": [
+        "wasn t home",
+        "not at home",
+        "missed delivery",
+        "courier came",
+        "nobody home",
+        "was not home"
+      ],
+      "answer": "The courier tries to deliver up to 3 times. After that, the order goes back to Kartify."
+    },
+    {
+      "id": "return_how",
+      "topic": "Returns",
+      "priority": 1,
+      "order_specific": true,
+      "triggers": [
+        "return",
+        "send back",
+        "return karna",
+        "wapas karna",
+        "रिटर्न",
+        "वापस करने",
+        "वापस करना",
+        "वापस करें",
+        "परत करायचे",
+        "परत करायची",
+        "परत करा"
+      ],
+      "answer": "You can return most items within 7 days of delivery. Open My Orders, select the item and tap Return Item. Pickup is free, and the item must be in its original packaging with tags.",
+      "answer_hi": "आप ज़्यादातर सामान डिलीवरी के 7 दिनों के भीतर वापस कर सकते हैं। My Orders खोलें, सामान चुनें और Return Item दबाएँ। पिकअप मुफ़्त है, और सामान टैग के साथ मूल पैकेजिंग में होना चाहिए।",
+      "answer_mr": "बहुतेक वस्तू डिलिव्हरीनंतर 7 दिवसांत परत करता येतात. My Orders उघडा, वस्तू निवडा आणि Return Item दाबा. पिकअप मोफत आहे, आणि वस्तू टॅगसह मूळ पॅकेजिंगमध्ये असावी."
+    },
+    {
+      "id": "return_electronics",
+      "topic": "Returns",
+      "priority": 3,
+      "triggers": [
+        "phone",
+        "mobile",
+        "earphones",
+        "earbuds",
+        "headphones",
+        "laptop",
+        "tablet",
+        "charger",
+        "electronics",
+        "television",
+        "speaker"
+      ],
+      "answer": "Electronics have a 10-day return window. The item must be unused, with its original box and accessories. Pickup is free."
+    },
+    {
+      "id": "not_returnable",
+      "topic": "Returns",
+      "priority": 4,
+      "triggers": [
+        "lipstick",
+        "cosmetics",
+        "makeup",
+        "innerwear",
+        "underwear",
+        "grocery",
+        "groceries",
+        "perishable",
+        "vegetables",
+        "fruits",
+        "food item"
+      ],
+      "answer": "I'm sorry, cosmetics, innerwear and perishable groceries can't be returned because of hygiene and safety reasons."
+    },
+    {
+      "id": "return_shipping",
+      "topic": "Returns",
+      "priority": 4,
+      "triggers": [
+        "return shipping",
+        "return charge",
+        "pickup charge",
+        "pay for return",
+        "shipping cost",
+        "return fee",
+        "pickup free"
+      ],
+      "answer": "No, you don't pay anything. Return pickup is completely free."
+    },
+    {
+      "id": "packaging",
+      "topic": "Returns",
+      "priority": 4,
+      "triggers": [
+        "original box",
+        "lost the box",
+        "no box",
+        "without box",
+        "packaging",
+        "tags removed",
+        "no tags",
+        "threw the box",
+        "box nahi"
+      ],
+      "answer": "The item should come back in its original packaging with tags and labels. Without them, the return may not be accepted. If you'd like, I can have a specialist look at your case."
+    },
+    {
+      "id": "refund_when",
+      "topic": "Refunds",
+      "priority": 1,
+      "order_specific": true,
+      "triggers": [
+        "refund",
+        "money back",
+        "paisa wapas",
+        "पैसे वापस",
+        "रिफंड",
+        "refund kab",
+        "परतावा",
+        "पैसे परत",
+        "रिफंड कब",
+        "रिफंड कधी"
+      ],
+      "answer": "Refunds are processed within 5 to 7 business days after we receive the returned item. If you paid with Kartify Wallet, the refund is instant.",
+      "answer_hi": "वापस किया गया सामान मिलने के 5 से 7 कार्य दिवसों में रिफंड प्रोसेस हो जाता है। अगर आपने Kartify Wallet से भुगतान किया था, तो रिफंड तुरंत मिलता है।",
+      "answer_mr": "परत केलेली वस्तू मिळाल्यानंतर 5 ते 7 कामकाजी दिवसांत परतावा प्रक्रिया केला जातो. तुम्ही Kartify Wallet ने पैसे दिले असतील तर परतावा लगेच मिळतो."
+    },
+    {
+      "id": "refund_where",
+      "topic": "Refunds",
+      "priority": 3,
+      "triggers": [
+        "refund go",
+        "where refund",
+        "refund method",
+        "original payment",
+        "which account",
+        "refund kahan"
+      ],
+      "answer": "The refund goes back to your original payment method, which is your card, UPI or wallet."
+    },
+    {
+      "id": "refund_cod",
+      "topic": "Refunds",
+      "priority": 4,
+      "triggers": [
+        "cash on delivery",
+        "cod",
+        "paid cash",
+        "paid in cash",
+        "cash payment"
+      ],
+      "answer": "For Cash on Delivery orders, the refund goes to your bank account. Please share your bank details securely in the app, and never over the call."
+    },
+    {
+      "id": "refund_status",
+      "topic": "Refunds",
+      "priority": 4,
+      "triggers": [
+        "refund status",
+        "check refund",
+        "track refund",
+        "refund track"
+      ],
+      "answer": "You can check your refund anytime in the app. Open My Orders and choose Refund Status."
+    },
+    {
+      "id": "refund_late",
+      "topic": "Refunds",
+      "priority": 5,
+      "order_specific": true,
+      "escalate": true,
+      "triggers": [
+        "no refund",
+        "refund not",
+        "not got refund",
+        "haven t got refund",
+        "refund hasn t",
+        "refund still",
+        "refund pending",
+        "refund nahi"
+      ],
+      "answer": "I'm sorry your refund is taking longer than expected."
+    },
+    {
+      "id": "exchange",
+      "topic": "Exchanges",
+      "priority": 2,
+      "order_specific": true,
+      "triggers": [
+        "exchange",
+        "change size",
+        "different size",
+        "other size",
+        "bigger size",
+        "smaller size",
+        "different colour",
+        "different color",
+        "other colour",
+        "other color",
+        "size change",
+        "एक्सचेंज",
+        "दूसरे साइज",
+        "दूसरे साइज़",
+        "आकारात बदलू",
+        "आकारात बदल"
+      ],
+      "answer": "Yes, exchanges are allowed for a different size or colour of the same product, within 7 days of delivery. If the new one costs more, you pay the difference. If it costs less, we refund the difference. Pickup and delivery are free.",
+      "answer_hi": "जी हाँ, डिलीवरी के 7 दिनों के भीतर उसी प्रोडक्ट का दूसरा साइज़ या रंग बदला जा सकता है। नया सामान महँगा हो तो अंतर आप देंगे, सस्ता हो तो हम अंतर लौटा देंगे। पिकअप और डिलीवरी मुफ़्त हैं।",
+      "answer_mr": "हो, डिलिव्हरीनंतर 7 दिवसांत त्याच उत्पादनाचा वेगळा आकार किंवा रंग बदलून मिळू शकतो. नवीन वस्तू महाग असेल तर फरक तुम्ही द्याल, स्वस्त असेल तर आम्ही फरक परत करू. पिकअप आणि डिलिव्हरी मोफत आहेत."
+    },
+    {
+      "id": "exchange_other",
+      "topic": "Exchanges",
+      "priority": 5,
+      "triggers": [
+        "different product",
+        "another product",
+        "other product",
+        "different item",
+        "swap for",
+        "exchange for another item",
+        "something else"
+      ],
+      "answer": "I'm sorry, exchanges are only for the same product in a different size or colour. You can return the item and place a new order for the one you want."
+    },
+    {
+      "id": "damaged",
+      "topic": "Damaged or wrong item",
+      "priority": 5,
+      "order_specific": true,
+      "triggers": [
+        "broken",
+        "damaged",
+        "damage",
+        "defective",
+        "not working",
+        "torn",
+        "cracked",
+        "dead on arrival",
+        "toota",
+        "kharab",
+        "faulty",
+        "टूटा",
+        "खराब",
+        "तुटलेली",
+        "तुटले",
+        "फुटलेली"
+      ],
+      "answer": "I'm so sorry about that. Please report it in the app within 48 hours of delivery with photos of the item. You can choose a full refund or a free replacement, and there's no return shipping charge.",
+      "answer_hi": "मुझे इसके लिए बहुत खेद है। कृपया डिलीवरी के 48 घंटों के भीतर सामान की फ़ोटो के साथ ऐप में शिकायत दर्ज करें। आप पूरा रिफंड या मुफ़्त रिप्लेसमेंट चुन सकते हैं, और रिटर्न शिपिंग का कोई शुल्क नहीं है।",
+      "answer_mr": "याबद्दल मला खूप खेद आहे. कृपया डिलिव्हरीनंतर 48 तासांत वस्तूच्या फोटोंसह ॲपमध्ये तक्रार नोंदवा. तुम्ही पूर्ण परतावा किंवा मोफत बदली निवडू शकता, आणि परतीचा शिपिंग खर्च नाही."
+    },
+    {
+      "id": "wrong_item",
+      "topic": "Damaged or wrong item",
+      "priority": 4,
+      "order_specific": true,
+      "triggers": [
+        "wrong item",
+        "wrong product",
+        "received wrong",
+        "got wrong",
+        "different item received",
+        "someone else s",
+        "galat item",
+        "galat product"
+      ],
+      "answer": "I'm sorry about the mix-up. Please report it in the app within 48 hours of delivery with photos. You can choose a full refund or a free replacement, and there's no return shipping charge."
+    },
+    {
+      "id": "damaged_late",
+      "topic": "Damaged or wrong item",
+      "priority": 6,
+      "escalate": true,
+      "triggers": [
+        "after 48 hours",
+        "48 hours passed",
+        "48 hours over",
+        "48 hours are over",
+        "4 days",
+        "four days",
+        "5 days ago",
+        "week ago",
+        "too late to report"
+      ],
+      "answer": "I'm sorry, the 48-hour reporting window has already passed for this."
+    },
+    {
+      "id": "replacement_speed",
+      "topic": "Damaged or wrong item",
+      "priority": 5,
+      "triggers": [
+        "replacement time",
+        "how fast replacement",
+        "when replacement",
+        "replacement arrive",
+        "replacement kab",
+        "replacement speed"
+      ],
+      "answer": "Once your replacement is approved, it ships within 24 hours."
+    },
+    {
+      "id": "extra_charge",
+      "topic": "Payments & pricing",
+      "priority": 2,
+      "triggers": [
+        "charged extra",
+        "extra charge",
+        "overcharged",
+        "extra money",
+        "wrong price",
+        "more money",
+        "extra paisa",
+        "zyada paisa",
+        "price difference charged"
+      ],
+      "answer": "I'm sorry about that. All our prices already include taxes. If you were overcharged because of a pricing error, the difference is refunded within 3 business days."
+    },
+    {
+      "id": "payment_methods",
+      "topic": "Payments & pricing",
+      "priority": 2,
+      "triggers": [
+        "payment methods",
+        "payment options",
+        "how can i pay",
+        "accept upi",
+        "accept card",
+        "net banking",
+        "cod limit",
+        "cod available",
+        "which payment"
+      ],
+      "answer": "We accept UPI, debit and credit cards, net banking, Kartify Wallet and Cash on Delivery. Cash on Delivery is available for orders up to 20,000 rupees."
+    },
+    {
+      "id": "deducted",
+      "topic": "Payments & pricing",
+      "priority": 5,
+      "triggers": [
+        "money deducted",
+        "amount deducted",
+        "payment failed",
+        "debited",
+        "deducted",
+        "paisa kat gaya",
+        "paisa cut"
+      ],
+      "answer": "If money was deducted but the order wasn't placed, it's refunded automatically within 5 business days."
+    },
+    {
+      "id": "password",
+      "topic": "Account & app",
+      "priority": 2,
+      "triggers": [
+        "forgot password",
+        "password",
+        "can t login",
+        "cannot login",
+        "login problem",
+        "unable to login",
+        "reset password"
+      ],
+      "answer": "On the login screen, tap Forgot Password and follow the steps to reset it."
+    },
+    {
+      "id": "change_address",
+      "topic": "Account & app",
+      "priority": 3,
+      "triggers": [
+        "change address",
+        "update address",
+        "wrong address",
+        "new address",
+        "change phone number",
+        "update phone",
+        "change email",
+        "update email",
+        "address change"
+      ],
+      "answer": "You can update your address, phone number or email in the Profile section of the app. Please note the address can't be changed once an order has shipped."
+    },
+    {
+      "id": "app_crash",
+      "topic": "Account & app",
+      "priority": 3,
+      "triggers": [
+        "app crash",
+        "app crashing",
+        "keeps crashing",
+        "app not working",
+        "app not opening",
+        "app slow",
+        "app hang",
+        "app problem",
+        "app issue"
+      ],
+      "answer": "Please try updating the app first. If that doesn't help, clear the app cache or reinstall it."
+    },
+    {
+      "id": "otp_security",
+      "topic": "Security",
+      "priority": 6,
+      "escalate": true,
+      "triggers": [
+        "otp",
+        "pin number",
+        "asked my password",
+        "fraud call",
+        "scam",
+        "someone called",
+        "suspicious call",
+        "asked for my card"
+      ],
+      "answer": "Kartify never asks for your OTP, PIN or password on a call. Please don't share them with anyone."
+    },
+    {
+      "id": "identity",
+      "topic": "General",
+      "priority": 1,
+      "triggers": [
+        "who are you",
+        "are you a robot",
+        "are you human",
+        "are you real",
+        "your name",
+        "tum kaun ho"
+      ],
+      "answer": "I'm Vera, Kartify's AI voice assistant. I can help with orders, returns, refunds, exchanges and payments."
+    }
+  ],
+  "hard_escalation_triggers": [
+    "manager",
+    "supervisor",
+    "to a human",
+    "real human",
+    "human agent",
+    "human being",
+    "real person",
+    "speak to someone",
+    "talk to someone",
+    "customer care executive",
+    "complaint",
+    "legal",
+    "lawyer",
+    "court",
+    "consumer court",
+    "sue",
+    "police",
+    "cheated",
+    "cheat",
+    "fraud",
+    "मैनेजर",
+    "मॅनेजर",
+    "मॅनेजरशी",
+    "इंसान से बात"
+  ],
+  "abuse_words": [
+    "idiot",
+    "stupid",
+    "useless",
+    "nonsense",
+    "shut up",
+    "bakwas",
+    "pagal"
+  ],
+  "thanks_triggers": [
+    "thank",
+    "thanks",
+    "thank you",
+    "shukriya",
+    "dhanyavad",
+    "धन्यवाद",
+    "शुक्रिया",
+    "आभार"
+  ],
+  "bye_triggers": [
+    "bye",
+    "goodbye",
+    "that s all",
+    "that is all",
+    "nothing else",
+    "no thanks",
+    "no that s it",
+    "bas itna hi",
+    "अलविदा",
+    "बस इतना ही",
+    "एवढेच"
+  ],
+  "greet_triggers": [
+    "hello",
+    "hi",
+    "hey",
+    "good morning",
+    "good afternoon",
+    "good evening",
+    "namaste",
+    "नमस्ते",
+    "नमस्कार"
+  ],
+  "i18n": {
+    "en": {
+      "greeting": "Hi, thank you for calling Kartify Support, this is Vera. May I have your Order ID so I can help you with that?",
+      "escalation": "I completely understand, and I'm sorry for the trouble. Let me connect you with one of our specialists, who will personally call you back within 5 minutes to resolve this.",
+      "bye": "Thank you for choosing Kartify. Have a wonderful day!",
+      "thanks": "You're welcome! Is there anything else I can help you with today?",
+      "greet": "Hello! How can I help you today?",
+      "unclear": "Sorry, I didn't catch that. Could you say it once more?",
+      "noted": "Thank you, I've noted order {oid}. How can I help you with it?",
+      "askorder": " By the way, could you share your Order ID so I can note it down?"
+    },
+    "hi": {
+      "greeting": "नमस्ते, Kartify सपोर्ट में आपका स्वागत है, मैं वेरा बोल रही हूँ। क्या आप अपना ऑर्डर आईडी बता सकते हैं?",
+      "escalation": "मैं समझती हूँ और असुविधा के लिए क्षमा चाहती हूँ। मैं आपको हमारे विशेषज्ञ से जोड़ रही हूँ, जो 5 मिनट के भीतर आपको स्वयं कॉल करेंगे।",
+      "bye": "Kartify चुनने के लिए धन्यवाद। आपका दिन शुभ हो!",
+      "thanks": "आपका स्वागत है! क्या मैं और किसी चीज़ में आपकी मदद कर सकती हूँ?",
+      "greet": "नमस्ते! मैं आपकी कैसे मदद कर सकती हूँ?",
+      "unclear": "माफ़ कीजिए, मैं सुन नहीं पाई। क्या आप दोबारा बोल सकते हैं?",
+      "noted": "धन्यवाद, मैंने ऑर्डर {oid} नोट कर लिया है। इसमें मैं आपकी क्या मदद करूँ?",
+      "askorder": " क्या आप अपना ऑर्डर आईडी बताएँगे, ताकि मैं उसे नोट कर लूँ?"
+    },
+    "mr": {
+      "greeting": "नमस्कार, Kartify सपोर्टमध्ये आपले स्वागत आहे, मी वेरा बोलत आहे. कृपया तुमचा ऑर्डर आयडी सांगाल का?",
+      "escalation": "मी समजू शकते आणि झालेल्या त्रासाबद्दल क्षमस्व. मी तुम्हाला आमच्या तज्ज्ञाशी जोडते, ते 5 मिनिटांत तुम्हाला स्वतः कॉल करतील.",
+      "bye": "Kartify निवडल्याबद्दल धन्यवाद. तुमचा दिवस शुभ जावो!",
+      "thanks": "तुमचे स्वागत आहे! आणखी काही मदत हवी आहे का?",
+      "greet": "नमस्कार! मी तुमची कशी मदत करू?",
+      "unclear": "क्षमस्व, मला नीट ऐकू आले नाही. कृपया पुन्हा सांगाल का?",
+      "noted": "धन्यवाद, मी ऑर्डर {oid} नोंदवला आहे. यामध्ये मी काय मदत करू?",
+      "askorder": " कृपया तुमचा ऑर्डर आयडी सांगाल का, म्हणजे मी तो नोंदवून ठेवते?"
+    }
+  }
+}
