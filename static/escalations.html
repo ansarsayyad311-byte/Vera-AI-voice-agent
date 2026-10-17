@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vera | Specialist callbacks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0A0A0A;--yellow:#FFC800;--paper:#F5F5F2;--line:#E2E2DD;--muted:#5A5A55;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:#1A1A1A;font-family:'DM Sans',system-ui,sans-serif;line-height:1.5}
+h1,.brand-word{font-family:'Sora',system-ui,sans-serif;letter-spacing:-.03em;margin:0}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+header{background:var(--black);color:#fff}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.brand-word{font-size:28px;font-weight:700;color:var(--yellow)}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav a{text-decoration:none;font-weight:500;font-size:15px;padding:10px 16px;border-radius:999px;color:#E9E9E4;min-height:44px;display:inline-flex;align-items:center}
+nav a:hover{background:#1F1F1F}nav a.on{background:var(--yellow);color:var(--black)}
+.head{padding:26px 0 46px}
+.head h1{font-size:clamp(28px,4.5vw,44px);line-height:1.08}
+.head p{color:#C9C9C2;margin:10px 0 0;max-width:620px;font-size:17px}
+main{margin-top:-26px;padding-bottom:56px}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.count{font-family:'Sora',sans-serif;font-weight:700;font-size:20px}
+.count span{display:inline-block;background:var(--yellow);color:var(--black);border-radius:999px;padding:2px 12px;margin-left:8px}
+button{font:inherit;cursor:pointer;border:1.5px solid var(--black);background:#fff;color:var(--black);border-radius:999px;padding:10px 18px;min-height:44px;font-weight:600}
+button:hover{background:var(--yellow)}
+button:focus-visible,nav a:focus-visible{outline:3px solid var(--black);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th{text-align:left;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:2px solid var(--black)}
+td{padding:14px 12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:15px}
+tr.new td{background:#FFF4CC}
+.reason{display:inline-block;background:var(--black);color:var(--yellow);border-radius:999px;padding:3px 11px;font-size:13px;font-weight:600}
+.empty{padding:40px 10px;text-align:center;color:var(--muted)}
+.live{font-size:13px;color:var(--muted)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--yellow);border:1.5px solid var(--black);margin-right:6px}
+</style>
+<link rel="stylesheet" href="/static/fx.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="bar">
+      <a class="brand" href="/" aria-label="Vera home">
+        <svg width="46" height="46" viewBox="0 0 64 64" role="img" aria-label="Vera logo">
+          <rect width="64" height="64" rx="16" fill="#FFC800"/>
+          <rect x="9.25" y="13" width="5.5" height="14" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+          <rect x="19.25" y="13" width="5.5" height="26" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+          <rect x="29.25" y="13" width="5.5" height="38" rx="2.75" fill="#0A0A0A"/>
+          <rect x="39.25" y="13" width="5.5" height="26" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+          <rect x="49.25" y="13" width="5.5" height="14" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+        </svg>
+        <span class="brand-word">Vera</span>
+      </a>
+      <nav aria-label="Main"><a href="/">Live demo</a><a href="/orders">Orders database</a><a href="/arena">Vera Arena</a><a class="on" href="/escalations">Specialist callbacks</a></nav>
+    </div>
+    <div class="head">
+      <h1>Calls handed to a specialist</h1>
+      <p>Every time Vera meets a question outside the policy, a legal or fraud issue, or an angry customer, it appears here so a human can call back within 5 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="card">
+    <div class="top">
+      <div class="count">Callbacks waiting<span id="n">0</span></div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <span class="live"><span class="dot"></span>Updates automatically</span>
+        <button id="clear" type="button">Clear list</button>
+      </div>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Time</th><th>Order ID</th><th>Reason</th><th>Customer said</th><th>Case summary for specialist</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty">No callbacks yet. Ask Vera something outside the policy on the demo page.</div>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  const rows = document.getElementById('rows'), empty = document.getElementById('empty'), n = document.getElementById('n');
+  let seen = new Set(), first = true;
+  const esc = (s) => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  async function load(){
+    try{
+      const r = await fetch('/api/escalations'); const data = await r.json();
+      n.textContent = data.length;
+      empty.style.display = data.length ? 'none' : 'block';
+      rows.innerHTML = data.map(d => {
+        const fresh = !first && !seen.has(d.id);
+        return '<tr class="' + (fresh ? 'new' : '') + '"><td>' + esc(d.ts) + '</td><td>' + esc(d.order_id) + '</td><td><span class="reason">' + esc(d.reason) + '</span></td><td>' + esc(d.message) + '</td><td style="white-space:pre-wrap;font-size:13.5px;color:#3a3a36">' + esc(d.summary || '') + '</td></tr>';
+      }).join('');
+      data.forEach(d => seen.add(d.id)); first = false;
+    }catch(e){}
+  }
+  document.getElementById('clear').addEventListener('click', async () => {
+    await fetch('/api/escalations/clear', {method:'POST'}); seen = new Set(); load();
+  });
+  load(); setInterval(load, 3000);
+})();
+</script>
+<script src="/static/fx.js" defer></script>
+</body>
+</html>

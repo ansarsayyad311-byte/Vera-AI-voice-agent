@@ -1,0 +1,57 @@
+/* Vera design layer: motion and polish shared by every page. Respects "reduce motion". */
+:root{--ease:cubic-bezier(.2,.7,.2,1)}
+html{scroll-behavior:smooth}
+body{animation:pg .5s var(--ease) both}
+body.leaving{opacity:0;transform:translateY(-6px);transition:opacity .18s ease,transform .18s ease}
+@keyframes pg{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* header: slow drifting glow behind the logo */
+header{position:relative;overflow:hidden}
+header>.wrap{position:relative;z-index:1}
+header::before,header::after{content:"";position:absolute;border-radius:50%;filter:blur(70px);opacity:.22;pointer-events:none;animation:drift 14s ease-in-out infinite alternate}
+header::before{width:340px;height:340px;background:#FFC800;top:-170px;right:8%}
+header::after{width:280px;height:280px;background:#FF9F1C;bottom:-180px;left:12%;animation-duration:18s;animation-direction:alternate-reverse}
+@keyframes drift{to{transform:translate(60px,30px) scale(1.15)}}
+.brand svg{transition:transform .4s var(--ease)}.brand:hover svg{transform:rotate(-8deg) scale(1.08)}
+
+/* nav: sliding underline */
+nav a{position:relative}
+nav a:not(.on)::after{content:"";position:absolute;left:16px;right:16px;bottom:8px;height:2px;background:#FFC800;transform:scaleX(0);transform-origin:left;transition:transform .28s var(--ease)}
+nav a:not(.on):hover::after{transform:scaleX(1)}
+
+/* cards and scroll reveal */
+.card{transition:box-shadow .3s var(--ease)}.card:hover{box-shadow:0 16px 40px rgba(0,0,0,.1)}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* buttons, chips, ripple */
+button,.btn{position:relative;overflow:hidden}
+button:not(:disabled):hover{transform:translateY(-1px)}
+button:not(:disabled):active{transform:scale(.97)}
+.chip:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.08)}
+.rip{position:absolute;border-radius:50%;background:rgba(0,0,0,.18);transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+
+/* tables: rows glide in on first load; new callbacks flash */
+tbody.stagger tr{animation:rowin .5s var(--ease) both;animation-delay:calc(var(--i,0)*40ms)}
+@keyframes rowin{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+tbody tr{transition:background .2s}tbody tr:hover td{background:#FFFBEA}
+tr.new td{animation:flash 1.8s ease-out}
+@keyframes flash{from{background:#FFC800}}
+
+/* status badges: Pending pulses so it reads as "in progress" */
+.b.warn::before,.st.Pending::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#E0A800;margin-right:6px;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25;transform:scale(.7)}}
+.b,.st{transition:transform .2s var(--ease)}tr:hover .b{transform:scale(1.06)}
+
+/* chat order card */
+.ocard{animation:cardin .55s var(--ease) both .15s}
+@keyframes cardin{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+
+/* arena score cards */
+.metrics .m{animation:mpop .65s var(--ease) both;transition:transform .3s var(--ease),box-shadow .3s}
+.metrics .m:nth-child(2){animation-delay:.12s}.metrics .m:nth-child(3){animation-delay:.24s}
+.metrics .m:hover{transform:translateY(-5px) rotate(-.5deg);box-shadow:0 14px 30px rgba(255,200,0,.4)}
+@keyframes mpop{from{opacity:0;transform:translateY(16px) scale(.94)}to{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vera | Orders database</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0A0A0A;--yellow:#FFC800;--paper:#F5F5F2;--line:#E2E2DD;--muted:#5A5A55;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:#1A1A1A;font-family:'DM Sans',system-ui,sans-serif;line-height:1.5}
+h1,.brand-word{font-family:'Sora',system-ui,sans-serif;letter-spacing:-.03em;margin:0}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+header{background:var(--black);color:#fff}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.brand-word{font-size:28px;font-weight:700;color:var(--yellow)}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav a{text-decoration:none;font-weight:500;font-size:15px;padding:10px 16px;border-radius:999px;color:#E9E9E4;min-height:44px;display:inline-flex;align-items:center}
+nav a:hover{background:#1F1F1F}nav a.on{background:var(--yellow);color:var(--black)}
+.head{padding:26px 0 46px}
+.head h1{font-size:clamp(28px,4.5vw,44px);line-height:1.08}
+.head p{color:#C9C9C2;margin:10px 0 0;max-width:620px;font-size:17px}
+main{margin-top:-26px;padding-bottom:56px}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.count{font-family:'Sora',sans-serif;font-weight:700;font-size:20px}
+.count span{display:inline-block;background:var(--yellow);color:var(--black);border-radius:999px;padding:2px 12px;margin-left:8px}
+button{font:inherit;cursor:pointer;border:1.5px solid var(--black);background:#fff;color:var(--black);border-radius:999px;padding:10px 18px;min-height:44px;font-weight:600}
+button:hover{background:var(--yellow)}
+button:focus-visible,nav a:focus-visible{outline:3px solid var(--black);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th{text-align:left;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:2px solid var(--black)}
+td{padding:14px 12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:15px}
+tr.new td{background:#FFF4CC}
+.reason{display:inline-block;background:var(--black);color:var(--yellow);border-radius:999px;padding:3px 11px;font-size:13px;font-weight:600}
+.empty{padding:40px 10px;text-align:center;color:var(--muted)}
+.live{font-size:13px;color:var(--muted)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--yellow);border:1.5px solid var(--black);margin-right:6px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+input,select{font:inherit;border:1.5px solid var(--black);border-radius:999px;padding:10px 16px;min-height:44px;background:#fff}
+input{flex:1;min-width:200px}
+.b{display:inline-block;border-radius:999px;padding:3px 11px;font-size:13px;font-weight:600;background:#EDEDE8;color:#222;white-space:nowrap}
+.b.ok{background:#DDF3E4;color:#14532D}.b.warn{background:#FFF1BF;color:#5C4400}.b.bad{background:#FBE0DD;color:#8A1C14}
+h2{font-family:'Sora',sans-serif;font-size:20px;margin:30px 0 12px}
+.hint{background:#FFF4CC;border-radius:14px;padding:12px 16px;font-size:14.5px;margin-bottom:16px}
+.id{font-family:ui-monospace,Menlo,monospace;font-weight:600}
+</style>
+<link rel="stylesheet" href="/static/fx.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="bar">
+      <a class="brand" href="/" aria-label="Vera home">
+        <svg width="46" height="46" viewBox="0 0 64 64" role="img" aria-label="Vera logo">
+          <rect width="64" height="64" rx="16" fill="#FFC800"/>
+          <rect x="9.25" y="13" width="5.5" height="14" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+          <rect x="19.25" y="13" width="5.5" height="26" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+          <rect x="29.25" y="13" width="5.5" height="38" rx="2.75" fill="#0A0A0A"/>
+          <rect x="39.25" y="13" width="5.5" height="26" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+          <rect x="49.25" y="13" width="5.5" height="14" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+        </svg>
+        <span class="brand-word">Vera</span>
+      </a>
+      <nav aria-label="Main"><a href="/">Live demo</a><a class="on" href="/orders">Orders database</a><a href="/arena">Vera Arena</a><a href="/escalations">Specialist callbacks</a></nav>
+    </div>
+    <div class="head">
+      <h1>Orders database</h1>
+      <p>Fictional demo orders that Vera checks before she answers. Ask her about any Order ID below and watch the status change when she cancels or returns something.</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="card">
+    <div class="hint"><b>Demo data only.</b> All names and orders are fictional. Try: <i>"Where is order 56567?"</i>, <i>"Cancel order 10004"</i>, <i>"I want to return order 77389"</i>, <i>"order 10006"</i> (delayed, hands over to a human).</div>
+    <div class="tools">
+      <input id="q" type="search" placeholder="Search by Order ID, name or product" aria-label="Search orders">
+      <select id="f" aria-label="Filter by status"><option value="">All statuses</option></select>
+      <button id="reset" type="button">Reset demo data</button>
+    </div>
+    <div class="scroll"><table>
+      <thead><tr><th>Order ID</th><th>Customer</th><th>Product</th><th>Amount</th><th>Status</th><th>Delivery</th></tr></thead>
+      <tbody id="rows"></tbody></table>
+      <div class="empty" id="empty" style="display:none">No orders match.</div></div>
+    <h2>Vera's action log</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Time</th><th>Order</th><th>Action</th><th>Status</th><th>Reference</th><th>Detail</th></tr></thead>
+      <tbody id="acts"></tbody></table>
+      <div class="empty" id="aempty">No actions yet. Ask Vera to cancel or return an order. She only says it worked when this log says Successful.</div></div>
+  </div>
+</main>
+<script>
+(function(){
+  const $ = id => document.getElementById(id); let data = {orders:[],actions:[]};
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const cls = s => ({'Delivered':'ok','Successful':'ok','Refund approved':'ok','Delayed':'bad','Failed':'bad','Cancelled':'bad','Processing':'warn','Pending':'warn','Return requested':'warn','Refund under review':'warn'}[s]||'');
+  const badge = s => '<span class="b '+cls(s)+'">'+esc(s)+'</span>';
+  function draw(){
+    const q = $('q').value.toLowerCase(), f = $('f').value;
+    const list = data.orders.filter(o => (!f || o.status===f) && (o.id+o.customer+o.product).toLowerCase().includes(q));
+    $('rows').innerHTML = list.map(o => '<tr><td class="id">'+esc(o.id)+'</td><td>'+esc(o.customer)+'</td><td>'+esc(o.product)+'</td><td>&#8377;'+o.amount.toLocaleString('en-IN')+'</td><td>'+badge(o.status)+'</td><td>'+esc(o.when)+'</td></tr>').join('');
+    $('empty').style.display = list.length ? 'none' : 'block';
+    $('acts').innerHTML = data.actions.map(a => '<tr><td>'+esc(a.ts)+'</td><td class="id">'+esc(a.order_id)+'</td><td>'+esc(a.action)+'</td><td>'+badge(a.status)+'</td><td>'+esc(a.ref||'')+'</td><td>'+esc(a.detail||'')+'</td></tr>').join('');
+    $('aempty').style.display = data.actions.length ? 'none' : 'block';
+  }
+  async function load(){
+    try{ data = await (await fetch('/api/orders')).json();
+      const cur = $('f').value, sts = [...new Set(data.orders.map(o=>o.status))].sort();
+      $('f').innerHTML = '<option value="">All statuses</option>' + sts.map(s=>'<option'+(s===cur?' selected':'')+'>'+esc(s)+'</option>').join('');
+      draw(); }catch(e){}
+  }
+  $('q').oninput = draw; $('f').onchange = draw;
+  $('reset').onclick = async () => { await fetch('/api/orders/reset',{method:'POST'}); load(); };
+  load(); setInterval(load, 3000);
+})();
+</script>
+<script src="/static/fx.js" defer></script>
+</body>
+</html>

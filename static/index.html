@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vera | AI Voice Agent</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230A0A0A'/%3E%3Crect x='9.25' y='13' width='5.5' height='14' rx='2.75' fill='%23FFC800'/%3E%3Crect x='19.25' y='13' width='5.5' height='26' rx='2.75' fill='%23FFC800'/%3E%3Crect x='29.25' y='13' width='5.5' height='38' rx='2.75' fill='%23FFC800'/%3E%3Crect x='39.25' y='13' width='5.5' height='26' rx='2.75' fill='%23FFC800'/%3E%3Crect x='49.25' y='13' width='5.5' height='14' rx='2.75' fill='%23FFC800'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=DM+Sans:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#0A0A0A; --ink:#1A1A1A; --yellow:#FFC800; --yellow-soft:#FFF4CC;
+  --paper:#F5F5F2; --line:#E2E2DD; --muted:#5A5A55; --white:#FFFFFF;
+  --radius:20px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans','Noto Sans Devanagari',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.5}
+h1,h2,h3,.brand-word{font-family:'Sora','Noto Sans Devanagari','DM Sans',system-ui,sans-serif;letter-spacing:-0.03em;margin:0}
+a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+
+/* header */
+header{background:var(--black);color:var(--white)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand-word{font-size:28px;font-weight:700;color:var(--yellow)}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav a{text-decoration:none;font-weight:500;font-size:15px;padding:10px 16px;border-radius:999px;color:#E9E9E4;min-height:44px;display:inline-flex;align-items:center}
+nav a:hover{background:#1F1F1F}
+nav a.on{background:var(--yellow);color:var(--black)}
+.hero{padding:30px 0 54px}
+.hero h1{font-size:clamp(30px,5vw,52px);line-height:1.05;max-width:760px}
+.hero h1 [data-i=h1b]{color:var(--yellow)}
+.hero p{color:#C9C9C2;max-width:640px;font-size:18px;margin:14px 0 0}
+
+/* layout */
+main{margin-top:-28px}
+.grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:20px;align-items:stretch}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.grid > *{min-width:0}
+@media (max-width:480px){.card{padding:20px 16px}.btn{font-size:16px;padding:14px 22px}.msg{max-width:92%}}
+
+.card{border-radius:var(--radius);padding:24px}
+.call{background:var(--black);color:var(--white);display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;min-height:540px;box-shadow:0 18px 40px rgba(0,0,0,.18)}
+.chat{background:var(--white);border:1px solid var(--line);display:flex;flex-direction:column;min-height:540px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+
+/* visualiser */
+.viz{display:flex;align-items:center;justify-content:center;gap:12px;height:150px;margin-top:10px}
+.viz i{display:block;width:18px;border-radius:9px;background:var(--yellow);opacity:.6;height:40px;transform-origin:center}
+.viz i:nth-child(1),.viz i:nth-child(5){height:56px}
+.viz i:nth-child(2),.viz i:nth-child(4){height:92px}
+.viz i:nth-child(3){height:130px;opacity:1}
+.viz.listening i{animation:pulse 1.8s ease-in-out infinite}
+.viz.speaking i{animation:talk .55s ease-in-out infinite;opacity:1}
+.viz i:nth-child(2){animation-delay:.1s!important}.viz i:nth-child(3){animation-delay:.2s!important}
+.viz i:nth-child(4){animation-delay:.3s!important}.viz i:nth-child(5){animation-delay:.4s!important}
+@keyframes pulse{0%,100%{transform:scaleY(.8)}50%{transform:scaleY(1)}}
+@keyframes talk{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1.05)}}
+@media (prefers-reduced-motion:reduce){.viz i{animation:none!important}}
+
+.status{font-size:15px;color:#D9D9D2;min-height:24px}
+.status b{color:var(--yellow)}
+.who{font-family:'Sora',sans-serif;font-weight:700;font-size:26px;letter-spacing:-0.02em}
+.who small{display:block;font-family:'DM Sans',sans-serif;font-weight:500;font-size:13px;letter-spacing:.2em;color:var(--yellow);margin-top:2px}
+
+button{font:inherit;cursor:pointer}
+.btn{border:0;border-radius:999px;font-weight:600;font-size:17px;padding:15px 30px;min-height:52px;display:inline-flex;align-items:center;gap:10px}
+.btn-go{background:var(--yellow);color:var(--black)}
+.btn-go:hover{background:#FFD633}
+.btn-end{background:#2A2A2A;color:var(--white);border:1px solid #444}
+.btn-end:hover{background:#3A3A3A}
+.btn:focus-visible,select:focus-visible,input:focus-visible,.chip:focus-visible,nav a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.card.chat .btn:focus-visible,.chat input:focus-visible,.chip:focus-visible{outline-color:var(--black)}
+
+.opts{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:14px;color:#BDBDB5}
+select{background:#1C1C1C;color:var(--white);border:1px solid #3A3A3A;border-radius:10px;padding:9px 12px;min-height:44px;font:inherit}
+.pill{display:inline-block;border:1px solid #3A3A3A;border-radius:999px;padding:6px 12px;font-size:13px;color:#D9D9D2}
+.pill.ai{border-color:var(--yellow);color:var(--yellow)}
+
+.callback{display:block;max-height:0;opacity:0;overflow:hidden;padding:0 16px;transition:max-height .45s ease,opacity .35s ease,padding .35s ease;width:100%;background:var(--yellow);color:var(--black);border-radius:16px;padding:14px 16px;text-align:left}
+.callback.show{max-height:160px;opacity:1;padding:14px 16px}
+.callback strong{display:block;font-family:'Sora',sans-serif;font-size:16px}
+.callback .t{font-family:'Sora',sans-serif;font-size:30px;font-weight:700;letter-spacing:-.02em}
+.note{font-size:13px;color:#9A9A92;margin-top:auto}
+
+/* chat */
+.chat h2{font-size:20px;margin-bottom:4px}
+.chat .sub{color:var(--muted);font-size:14px;margin:0 0 14px}
+.log{flex:1;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:4px 2px 12px;min-height:240px;max-height:380px}
+.msg{max-width:86%;padding:11px 15px;border-radius:16px;font-size:15.5px;line-height:1.45}
+.msg.v{background:var(--black);color:var(--white);border-bottom-left-radius:4px;align-self:flex-start}
+.msg.u{background:var(--yellow);color:var(--black);border-bottom-right-radius:4px;align-self:flex-end;font-weight:500}
+.msg.v .tag{display:block;font-size:11px;letter-spacing:.16em;color:var(--yellow);font-weight:600;margin-bottom:3px}
+.ocard{margin-top:9px;padding:9px 12px;border-radius:12px;background:#1F1F1F;border:1px solid #3a3a36;font-size:13.5px;line-height:1.5}
+.ocard b{color:var(--yellow)}.ocard .st{display:inline-block;border-radius:999px;padding:1px 10px;font-weight:600;font-size:12.5px;background:#EDEDE8;color:#111;margin-left:4px}
+.st.Successful,.st.Delivered{background:#DDF3E4;color:#14532D}.st.Pending{background:#FFF1BF;color:#5C4400}.st.Failed{background:#FBE0DD;color:#8A1C14}
+.msg.sys{align-self:center;background:var(--yellow-soft);color:#4A3B00;font-size:13px;border-radius:999px;padding:6px 14px}
+.empty{color:var(--muted);font-size:15px;margin:auto;text-align:center;max-width:320px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
+.chip{border:1px solid var(--line);background:var(--white);border-radius:999px;padding:8px 13px;font-size:13.5px;min-height:40px;color:var(--ink)}
+.chip:hover{border-color:var(--black);background:var(--yellow-soft)}
+.chip.esc{border-style:dashed}
+form{display:flex;gap:10px}
+input[type=text]{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:999px;padding:13px 18px;font:inherit;font-size:16px;min-height:50px;background:var(--white)}
+.btn-send{background:var(--black);color:var(--yellow);padding:0 22px}
+
+/* info strip */
+.strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:20px 0 56px}
+@media (max-width:800px){.strip{grid-template-columns:1fr}}
+.tile{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.tile h3{font-size:17px;margin-bottom:6px}
+.tile p{margin:0;color:var(--muted);font-size:15px}
+.tile .big{font-family:'Sora',sans-serif;font-weight:700;font-size:30px;letter-spacing:-.03em;margin-bottom:2px}
+.tile.dark{background:var(--black);color:var(--white);border-color:var(--black)}
+.tile.dark p{color:#C9C9C2}.tile.dark .big{color:var(--yellow)}
+footer{background:var(--black);color:#A9A9A2;padding:22px 0;font-size:14px}
+footer b{color:var(--yellow)}
+.unsupported{display:none;background:var(--yellow-soft);color:#4A3B00;border-radius:12px;padding:10px 14px;font-size:14px;text-align:left;width:100%}
+html{scroll-behavior:smooth}.log{scroll-behavior:smooth}
+.btn,.chip,nav a,.seg button,input{transition:background .2s,color .2s,border-color .2s,transform .15s,box-shadow .2s}
+.btn:active,.chip:active{transform:scale(.97)}.btn-go:hover{box-shadow:0 0 0 6px rgba(255,200,0,.18)}
+input[type=text]:focus{border-color:var(--black);box-shadow:0 0 0 3px var(--yellow-soft);outline:0}
+.seg{display:inline-flex;background:#1C1C1C;border:1px solid #3A3A3A;border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;color:#D9D9D2;border-radius:999px;padding:8px 14px;min-height:38px;font-size:14px}
+.seg button.on{background:var(--yellow);color:var(--black);font-weight:600}.seg button:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.msg{animation:pop .3s cubic-bezier(.2,.7,.2,1) both}.msg.sys{animation-duration:.4s}
+.msg.typing{display:flex;gap:5px;padding:15px 16px}.typing i{width:7px;height:7px;border-radius:50%;background:var(--yellow);animation:blink 1.1s infinite ease-in-out both}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+.hero h1,.hero p,.card{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}.hero p{animation-delay:.1s}.card{animation-delay:.2s}.chat{animation-delay:.3s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}}@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+<link rel="stylesheet" href="/static/fx.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="bar">
+      <a class="brand" href="/" aria-label="Vera home">
+        <svg width="46" height="46" viewBox="0 0 64 64" role="img" aria-label="Vera logo">
+          <rect width="64" height="64" rx="16" fill="#FFC800"/>
+          <rect x="9.25" y="13" width="5.5" height="14" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+          <rect x="19.25" y="13" width="5.5" height="26" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+          <rect x="29.25" y="13" width="5.5" height="38" rx="2.75" fill="#0A0A0A"/>
+          <rect x="39.25" y="13" width="5.5" height="26" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+          <rect x="49.25" y="13" width="5.5" height="14" rx="2.75" fill="#0A0A0A" fill-opacity=".6"/>
+        </svg>
+        <span class="brand-word">Vera</span>
+      </a>
+      <nav aria-label="Main">
+        <a class="on" href="/" data-i="navDemo">Live demo</a>
+        <a href="/orders" data-i="navOrders">Orders database</a>
+        <a href="/arena">Vera Arena</a>
+        <a href="/escalations" data-i="navCb">Specialist callbacks</a>
+      </nav>
+    </div>
+    <div class="hero">
+      <h1><span data-i="h1a">A customer-care agent that </span><span data-i="h1b">never puts you on hold.</span></h1>
+      <p data-i="sub">Vera answers customer calls using only your company's policies. When a question is outside the rules, she hands the call to a human specialist instead of guessing.</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+
+    <section class="card call" aria-label="Voice call">
+      <div class="who">Vera<small data-i="ai">AI VOICE AGENT</small></div>
+      <div class="viz" id="viz" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="status" id="status" role="status" aria-live="polite">Press the button to start a call.</div>
+
+      <button class="btn btn-go" id="callBtn" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/></svg>
+        <span id="callLabel">Start call with Vera</span>
+      </button>
+
+      <div class="opts">
+        <span class="lbl" data-i="speakIn">I will speak in</span>
+        <div class="seg" id="seg" role="radiogroup" aria-label="Language"><button type="button" role="radio" data-l="en">English</button><button type="button" role="radio" data-l="hi">हिन्दी</button><button type="button" role="radio" data-l="mr">मराठी</button></div>
+        <span class="pill" id="mode">Brain: policy rules</span>
+      </div>
+
+      <div class="unsupported" id="unsupported" data-i="unsup">Voice input needs Google Chrome or Microsoft Edge. You can still type your question on the right.</div>
+
+      <div class="callback" id="callback" role="alert">
+        <strong data-i="cbT">Specialist callback requested</strong>
+        <span data-i="cbP">A human expert will call back in</span> <span class="t" id="timer">5:00</span>
+      </div>
+
+      <p class="note" data-i="note">Tip: allow the microphone when your browser asks, and speak after Vera finishes her sentence.</p>
+    </section>
+
+    <section class="card chat" aria-label="Conversation">
+      <h2 data-i="convT">Conversation</h2>
+      <p class="sub" data-i="convS">What Vera hears and says appears here. You can also type if the room is noisy.</p>
+      <div class="log" id="log" aria-live="polite"><div class="empty" id="empty" data-i="empty">No call yet. Start a call, or tap a question below to try Vera.</div></div>
+      <div class="chips" id="chips"></div>
+      <form id="form" autocomplete="off">
+        <label for="text" style="position:absolute;left:-9999px">Type your question</label>
+        <input type="text" id="text" placeholder="Type a customer question…" maxlength="300">
+        <button class="btn btn-send" type="submit" data-i="send">Send</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="strip">
+    <div class="tile"><h3 data-i="t1h">1. Learns your rules</h3><p data-i="t1p">Returns, refunds, exchanges and delivery policies are loaded from one knowledge base file.</p></div>
+    <div class="tile"><h3 data-i="t2h">2. Answers on the call</h3><p data-i="t2p">Vera listens, finds the matching policy and speaks the answer in a calm, polite voice.</p></div>
+    <div class="tile dark"><div class="big">₹1 crore / month</div><p>Rough estimate: 500 call agents × ₹20,000 a month. Vera is planned at ₹50,000 to ₹60,000 a year.</p></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap"><b>Vera</b> · Open-source hackathon project · Kartify is a fictional demo company.</div>
+</footer>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const viz=$('viz'),statusEl=$('status'),callBtn=$('callBtn'),callLabel=$('callLabel'),log=$('log'),form=$('form'),textIn=$('text');
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition, synth=window.speechSynthesis;
+  const LC={en:'en-IN',hi:'hi-IN',mr:'mr-IN'};
+  const S={
+  en:{navDemo:'Live demo',navCb:'Specialist callbacks',navOrders:'Orders database',h1a:'A customer-care agent that ',h1b:'never puts you on hold.',sub:"Vera answers customer calls using only your company's policies. When a question is outside the rules, she hands the call to a human specialist instead of guessing.",ai:'AI VOICE AGENT',start:'Start call with Vera',end:'End call',idle:'Press the button to start a call.',listen:'Listening… <b>speak now</b>',hear:'Hearing:',speak:'<b>Vera</b> is speaking…',think:'Vera is thinking…',speakIn:'I will speak in',unsup:'Voice input needs Google Chrome or Microsoft Edge. You can still type your question on the right.',cbT:'Specialist callback requested',cbP:'A human expert will call back in',note:'Tip: allow the microphone when your browser asks, and speak after Vera finishes her sentence.',convT:'Conversation',convS:'What Vera hears and says appears here. You can also type if the room is noisy.',empty:'No call yet. Start a call, or tap a question below to try Vera.',ph:'Type a customer question…',send:'Send',conn:'Call connected',ended:'Call ended',endedEsc:'Call ended. A specialist will call you back.',handed:'Call handed to a human specialist. It is logged on the callbacks page.',err:'Could not reach the server. Please try again.',mic:'Microphone is blocked. Allow it in your browser, or type your question.',endedSt:'Call ended. <b>A specialist will call you back soon.</b>',t1h:'1. Learns your rules',t1p:'Returns, refunds, exchanges and delivery policies are loaded from one knowledge base file.',t2h:'2. Answers on the call',t2p:'Vera listens, finds the matching policy and speaks the answer in a calm, polite voice.',
+   chips:['Where is order 56567?','Cancel order 10004','Where is my order?','I want to return my earphones','My product arrived broken','When will I get my refund?','Can I exchange this for a different size?','Do you have a store near me?','I want to speak to a manager']},
+  hi:{navDemo:'लाइव डेमो',navCb:'विशेषज्ञ कॉलबैक',navOrders:'ऑर्डर डेटाबेस',h1a:'ऐसा कस्टमर-केयर एजेंट जो ',h1b:'आपको कभी होल्ड पर नहीं रखता।',sub:'वेरा ग्राहकों के कॉल का जवाब केवल आपकी कंपनी की नीतियों के आधार पर देती है। जब कोई सवाल नियमों से बाहर हो, तो वह अंदाज़ा लगाने के बजाय कॉल किसी विशेषज्ञ को सौंप देती है।',ai:'AI वॉइस एजेंट',start:'वेरा से कॉल शुरू करें',end:'कॉल समाप्त करें',idle:'कॉल शुरू करने के लिए बटन दबाएँ।',listen:'सुन रही हूँ… <b>अब बोलिए</b>',hear:'सुनाई दिया:',speak:'<b>वेरा</b> बोल रही है…',think:'वेरा सोच रही है…',speakIn:'बोलने की भाषा',unsup:'वॉइस इनपुट के लिए Google Chrome या Microsoft Edge चाहिए। आप दाईं ओर अपना सवाल टाइप भी कर सकते हैं।',cbT:'विशेषज्ञ कॉलबैक का अनुरोध किया गया',cbP:'विशेषज्ञ आपको कॉल करेंगे, शेष समय',note:'सुझाव: ब्राउज़र पूछे तो माइक्रोफ़ोन की अनुमति दें, और वेरा का वाक्य पूरा होने के बाद बोलें।',convT:'बातचीत',convS:'वेरा जो सुनती और कहती है, वह यहाँ दिखता है। शोर हो तो आप टाइप भी कर सकते हैं।',empty:'अभी कोई कॉल नहीं है। कॉल शुरू करें, या नीचे कोई सवाल चुनें।',ph:'ग्राहक का सवाल लिखें…',send:'भेजें',conn:'कॉल जुड़ गई',ended:'कॉल समाप्त',endedEsc:'कॉल समाप्त। एक विशेषज्ञ आपको वापस कॉल करेगा।',handed:'कॉल विशेषज्ञ को सौंप दी गई है। यह कॉलबैक पेज पर दर्ज है।',err:'सर्वर से संपर्क नहीं हो पाया। कृपया फिर कोशिश करें।',mic:'माइक्रोफ़ोन बंद है। ब्राउज़र में अनुमति दें, या अपना सवाल टाइप करें।',endedSt:'कॉल समाप्त। <b>एक विशेषज्ञ जल्द ही आपको कॉल करेगा।</b>',t1h:'1. आपके नियम सीखती है',t1p:'रिटर्न, रिफंड, एक्सचेंज और डिलीवरी की नीतियाँ एक नॉलेज बेस फ़ाइल से लोड होती हैं।',t2h:'2. कॉल पर जवाब देती है',t2p:'वेरा सुनती है, सही नीति ढूँढती है और शांत, विनम्र आवाज़ में जवाब बोलती है।',
+   chips:['ऑर्डर 56567 कहाँ है?','ऑर्डर 10004 रद्द करें','मेरा ऑर्डर कहाँ है?','मुझे अपने ईयरफोन वापस करने हैं','मेरा सामान टूटा हुआ आया','मुझे रिफंड कब मिलेगा?','क्या मैं दूसरे साइज में बदल सकता हूँ?','क्या मेरे पास कोई स्टोर है?','मुझे मैनेजर से बात करनी है']},
+  mr:{navDemo:'थेट डेमो',navCb:'तज्ज्ञ कॉलबॅक',navOrders:'ऑर्डर डेटाबेस',h1a:'असा कस्टमर-केअर एजंट जो ',h1b:'तुम्हाला कधीच होल्डवर ठेवत नाही.',sub:'वेरा ग्राहकांच्या कॉलना फक्त तुमच्या कंपनीच्या धोरणांवर आधारित उत्तर देते. प्रश्न नियमांबाहेरचा असेल तर ती अंदाज न बांधता कॉल तज्ज्ञाकडे सोपवते.',ai:'AI व्हॉइस एजंट',start:'वेराशी कॉल सुरू करा',end:'कॉल संपवा',idle:'कॉल सुरू करण्यासाठी बटण दाबा.',listen:'ऐकत आहे… <b>आता बोला</b>',hear:'ऐकले:',speak:'<b>वेरा</b> बोलत आहे…',think:'वेरा विचार करत आहे…',speakIn:'बोलण्याची भाषा',unsup:'व्हॉइस इनपुटसाठी Google Chrome किंवा Microsoft Edge लागते. तुम्ही उजवीकडे प्रश्न टाइपही करू शकता.',cbT:'तज्ज्ञ कॉलबॅकची विनंती केली',cbP:'तज्ज्ञ तुम्हाला कॉल करतील, उरलेला वेळ',note:'टीप: ब्राउझरने विचारल्यास मायक्रोफोनची परवानगी द्या आणि वेराचे वाक्य संपल्यावर बोला.',convT:'संभाषण',convS:'वेरा जे ऐकते आणि सांगते ते येथे दिसते. गोंगाट असेल तर तुम्ही टाइपही करू शकता.',empty:'अजून कॉल नाही. कॉल सुरू करा किंवा खालील प्रश्न निवडा.',ph:'ग्राहकाचा प्रश्न लिहा…',send:'पाठवा',conn:'कॉल जोडला गेला',ended:'कॉल संपला',endedEsc:'कॉल संपला. तज्ज्ञ तुम्हाला परत कॉल करतील.',handed:'कॉल तज्ज्ञाकडे सोपवला आहे. तो कॉलबॅक पानावर नोंदला आहे.',err:'सर्व्हरशी संपर्क होऊ शकला नाही. कृपया पुन्हा प्रयत्न करा.',mic:'मायक्रोफोन बंद आहे. ब्राउझरमध्ये परवानगी द्या किंवा प्रश्न टाइप करा.',endedSt:'कॉल संपला. <b>तज्ज्ञ लवकरच तुम्हाला कॉल करतील.</b>',t1h:'1. तुमचे नियम शिकते',t1p:'रिटर्न, परतावा, एक्सचेंज आणि डिलिव्हरीची धोरणे एका नॉलेज बेस फाइलमधून लोड होतात.',t2h:'2. कॉलवर उत्तर देते',t2p:'वेरा ऐकते, योग्य धोरण शोधते आणि शांत, नम्र आवाजात उत्तर सांगते.',
+   chips:['ऑर्डर 56567 कुठे आहे?','ऑर्डर 10004 रद्द करा','माझा ऑर्डर कुठे आहे?','मला माझे इयरफोन परत करायचे आहेत','माझी वस्तू तुटलेली आली','मला परतावा कधी मिळेल?','मी दुसऱ्या आकारात बदलू शकतो का?','जवळ तुमचे स्टोअर आहे का?','मला मॅनेजरशी बोलायचे आहे']}};
+  let L='en',sessionId=null,inCall=false,speaking=false,busy=false,rec=null,timerId=null,tok=0;
+  const t=k=>S[L][k];
+  if(!SR)$('unsupported').style.display='block';
+  if(synth)synth.getVoices();
+  const setStatus=h=>{statusEl.innerHTML=h};
+  const setViz=m=>{viz.className='viz'+(m?' '+m:'')};
+  const abortRec=()=>{try{if(rec)rec.abort()}catch(e){}};
+  const toEnd=()=>log.scrollTo({top:log.scrollHeight,behavior:'smooth'});
+
+  function applyLang(){
+    document.documentElement.lang=L;
+    document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+    textIn.placeholder=t('ph'); callLabel.textContent=inCall?t('end'):t('start');
+    const c=$('chips'); c.innerHTML='';
+    t('chips').forEach((q,i)=>{const b=document.createElement('button');b.type='button';b.className='chip'+(i>4?' esc':'');b.textContent=q;b.onclick=()=>{abortRec();handle(q)};c.appendChild(b)});
+    document.querySelectorAll('#seg button').forEach(b=>{const on=b.dataset.l===L;b.setAttribute('aria-checked',on);b.classList.toggle('on',on)});
+    if(!inCall&&!busy&&!speaking)setStatus(t('idle'));
+  }
+  document.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{L=b.dataset.l;applyLang();if(inCall)abortRec()});
+
+  function addCard(c){
+    if(!c||!c.order)return;const o=c.order,d=document.createElement('div');d.className='ocard';
+    const sp=(t,k)=>{const s=document.createElement('span');s.className='st '+(k||t);s.textContent=t;return s};
+    const b=document.createElement('b');b.textContent='Order '+o.id;d.append(b,' · '+o.product+' · ',sp(o.status),' ');
+    if(o.when&&o.when!=='-')d.append(o.when);
+    if(c.action){d.append(document.createElement('br'),c.action.name+': ',sp(c.action.status),' '+(c.action.ref||''))}
+    const m=log.lastElementChild;(m||log).appendChild(d);toEnd();
+  }
+  function addMsg(who,text){
+    const e=$('empty');if(e)e.remove();
+    const d=document.createElement('div');d.className='msg '+(who==='v'?'v':who==='u'?'u':'sys');
+    if(who==='v'){const g=document.createElement('span');g.className='tag';g.textContent='VERA';d.appendChild(g)}
+    d.appendChild(document.createTextNode(text));log.appendChild(d);toEnd();
+  }
+  function typing(on){
+    let e=$('typing');if(!on){if(e)e.remove();return}
+    if(e)return;e=document.createElement('div');e.id='typing';e.className='msg v typing';e.innerHTML='<i></i><i></i><i></i>';log.appendChild(e);toEnd();
+  }
+  async function post(url,body){
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok)throw new Error('Server error');return r.json();
+  }
+
+  /* ---------- voice: pick the most natural installed voice for the language ---------- */
+  function pickVoice(l){
+    if(!synth)return null;const want=LC[l];
+    const score=v=>{const lg=v.lang.replace('_','-');let s;
+      if(lg===want)s=50;else if(lg.startsWith(want.slice(0,2)))s=35;else if(l==='mr'&&lg.startsWith('hi'))s=20;else return -1;
+      if(/neural|natural|online/i.test(v.name))s+=25;if(/google/i.test(v.name))s+=10;
+      if(/female|heera|kalpana|swara|neerja|aarohi|lekha|veena|aditi|zira|samantha/i.test(v.name))s+=8;
+      if(/male|hemant|madhur|ravi|prabhat/i.test(v.name)&&!/female/i.test(v.name))s-=10;return s};
+    const best=synth.getVoices().map(v=>[score(v),v]).filter(x=>x[0]>=0).sort((a,b)=>b[0]-a[0])[0];
+    return best?best[1]:null;
+  }
+  /* speak sentence by sentence: natural pauses, and avoids Chrome cutting long text */
+  function speak(text,l,then){
+    if(!synth){if(then)then();return}
+    synth.cancel();const my=++tok;
+    const parts=(text.match(/[^.!?।]+[.!?।]*/g)||[text]).map(x=>x.trim()).filter(Boolean);
+    const v=pickVoice(l);let i=0;speaking=true;setViz('speaking');setStatus(t('speak'));
+    const fin=()=>{if(my!==tok)return;speaking=false;if(then)then()};
+    const next=()=>{
+      if(my!==tok)return;if(i>=parts.length)return fin();
+      const u=new SpeechSynthesisUtterance(parts[i++]);u.lang=v?v.lang:LC[l];if(v)u.voice=v;
+      u.rate=l==='en'?0.97:0.92;u.pitch=1;
+      u.onend=()=>setTimeout(next,140);u.onerror=()=>fin();synth.speak(u);
+    };
+    next();
+  }
+
+  /* ---------- listening ---------- */
+  function listen(){
+    if(!inCall||!SR||speaking||busy)return;
+    try{
+      rec=new SR();rec.lang=LC[L];rec.interimResults=true;rec.continuous=false;rec.maxAlternatives=1;let fin='';
+      rec.onstart=()=>{setViz('listening');setStatus(t('listen'))};
+      rec.onresult=e=>{let it='';for(let i=e.resultIndex;i<e.results.length;i++){const x=e.results[i][0].transcript;if(e.results[i].isFinal)fin+=x;else it+=x}
+        if(it)setStatus(t('hear')+' <b>'+it.replace(/</g,'&lt;')+'</b>')};
+      rec.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed'){endCall(true);setStatus(t('mic'))}};
+      rec.onend=()=>{if(fin.trim())handle(fin.trim());else if(inCall&&!speaking&&!busy)setTimeout(listen,250)};
+      rec.start();
+    }catch(err){setTimeout(listen,600)}
+  }
+
+  /* ---------- conversation ---------- */
+  async function handle(text){
+    addMsg('u',text);busy=true;setViz('');setStatus(t('think'));typing(true);
+    try{
+      const out=await post('/api/chat',{session_id:sessionId,message:text,lang:L});
+      sessionId=out.session_id;typing(false);
+      $('mode').textContent=out.mode==='gemma'?'Brain: Gemma 4':'Brain: policy rules';$('mode').classList.toggle('ai',out.mode==='gemma');
+      addMsg('v',out.reply);addCard(out.card);busy=false;if(out.escalated)showCallback();
+      const l=out.lang||L;
+      if(inCall)speak(out.reply,l,()=>{if(out.escalated)endCall(false,true);else{setViz('listening');listen()}});
+      else{const idle=()=>{setViz('');setStatus(t('idle'))};synth?speak(out.reply,l,idle):idle()}
+    }catch(err){
+      busy=false;typing(false);addMsg('sys',t('err'));setStatus(t('err'));if(inCall)setTimeout(listen,1500);
+    }
+  }
+  function showCallback(){
+    $('callback').classList.add('show');clearInterval(timerId);let left=300;
+    const tick=()=>{$('timer').textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');if(left--<=0)clearInterval(timerId)};
+    tick();timerId=setInterval(tick,1000);addMsg('sys',t('handed'));
+  }
+  async function startCall(){
+    inCall=true;busy=false;$('callback').classList.remove('show');clearInterval(timerId);
+    callBtn.className='btn btn-end';callLabel.textContent=t('end');
+    try{
+      const out=await post('/api/start',{lang:L});sessionId=out.session_id;
+      $('mode').textContent=out.ai_mode?'Brain: Gemma 4':'Brain: policy rules';$('mode').classList.toggle('ai',!!out.ai_mode);
+      addMsg('sys',t('conn'));addMsg('v',out.reply);
+      speak(out.reply,out.lang||L,()=>{if(inCall){setViz('listening');listen()}});
+    }catch(err){addMsg('sys',t('err'));endCall(true)}
+  }
+  function endCall(silent,esc){
+    inCall=false;busy=false;tok++;speaking=false;abortRec();if(synth)synth.cancel();setViz('');
+    callBtn.className='btn btn-go';callLabel.textContent=t('start');
+    if(!silent)addMsg('sys',esc?t('endedEsc'):t('ended'));
+    setStatus(esc?t('endedSt'):t('idle'));
+  }
+  callBtn.addEventListener('click',()=>{inCall?endCall():startCall()});
+  form.addEventListener('submit',e=>{e.preventDefault();const v=textIn.value.trim();if(!v)return;textIn.value='';abortRec();handle(v)});
+  applyLang();
+})();
+</script>
+<script src="/static/fx.js" defer></script>
+</body>
+</html>
