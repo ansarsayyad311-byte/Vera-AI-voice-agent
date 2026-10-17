@@ -3,6 +3,21 @@
   "greeting": "Hi, thank you for calling Kartify Support, this is Vera. May I have your Order ID so I can help you with that?",
   "entries": [
     {
+  "id": "case_detective",
+  "topic": "Case Detective",
+  "priority": 10,
+  "order_specific": true,
+  "triggers":[
+    "investigate order",
+    "check case",
+    "detective mode",
+    "inspect order",
+    "case status"
+  ],
+  
+  "answer": "Case Detective activated. I am cross-referencing your Order ID with our delivery logs, return window policies, and system timeline to verify the current status."
+},
+{
       "id": "track_order",
       "topic": "Orders & Delivery",
       "priority": 1,
@@ -150,6 +165,7 @@
         "food item"
       ],
       "answer": "I'm sorry, cosmetics, innerwear and perishable groceries can't be returned because of hygiene and safety reasons."
+
     },
     {
       "id": "return_shipping",

@@ -6,6 +6,22 @@ guess. She says a specialist will call back within 5 minutes, and the case appea
 
 Built for the Hacktoberfest / CodeCraft 2026 hackathon using **Gemma 4**. **Kartify is a fictional demo company.**
 
+## Features
+
+- **Policy-grounded answers:** Vera replies only from a knowledge base (`kb.json`), so she never invents policy.
+- **Optional Gemma 4 mode:** add a `GEMINI_API_KEY` for natural understanding. If the call fails, Vera falls back to the rules.
+- **Safe human handover:** requests for a human, legal or fraud issues, abuse, OTP/security topics and out-of-policy questions trigger a specialist callback with a 5-minute timer.
+- **Callbacks dashboard:** every handover is logged in SQLite and shown on `/escalations`.
+- **Session memory:** Vera notes the order ID and does not ask for it twice.
+- **English, Hindi and Marathi:** one switch changes the UI, speech input, replies and voice. Hindi and Marathi answers cover the most common topics (tracking, returns, refunds, exchanges, damaged items, cancellation); other topics answer in English until translated in `kb.json` (`answer_hi`, `answer_mr`).
+- **Voice or text:** browser speech recognition (Chrome or Edge) and natural voice selection, with a typed fallback.
+- **Smooth UI:** page-load fade-in, message animations, typing indicator, sliding callback banner, reduced-motion support.
+- **Case Detective:** Vera looks the Order ID up in a demo orders database (`orders.py`) and answers from real order data. Browse it on `/orders`.
+- **TrustGuard (action verification):** cancel and return requests run against a simulated backend. Vera only says "cancelled" when the backend confirms it, and every action is logged as Pending, Successful or Failed on `/orders`.
+- **Smart handover:** delayed orders and closed return windows go to a human with a case summary (order, reason, last messages) shown on `/escalations`.
+- **Vera Arena:** the `/arena` page runs 21 scripted customer scenarios and scores Answer Accuracy, Correct Escalations and Successful Resolutions (`arena.py`).
+- **One-click deploy:** Render config and health check included.
+
 ## Why it matters
 
 A call centre of 500 agents paid about Rs. 20,000 a month each costs roughly Rs. 1 crore a month
@@ -18,6 +34,8 @@ exchanges, payments) for a small yearly subscription, and pass only the hard cas
 |------|--------------|
 | `app.py` | Backend (Python Flask + SQLite). Matches questions to policies, decides when to escalate, logs callbacks. |
 | `.env.example` | Template for your private API key file. |
+| `orders.py` | Demo orders database (fictional), order lookup and the simulated cancel/return backend. Edit `SEED` to add orders. |
+| `static/orders.html` | Orders database page with search, status filter and Vera's action log. |
 | `kb.json` | Vera's knowledge base: every policy answer and the escalation rules. **Edit this to teach Vera a new company.** |
 | `static/index.html` | Frontend: voice call page (microphone in, spoken answer out) with typed fallback. |
 | `static/escalations.html` | Dashboard of calls handed to a human specialist. |

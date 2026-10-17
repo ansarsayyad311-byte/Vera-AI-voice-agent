@@ -21,6 +21,8 @@ import time
 import uuid
 from datetime import datetime
 
+import arena
+import orders
 from flask import Flask, jsonify, request, send_from_directory
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -63,13 +65,18 @@ def init_db():
                  message TEXT
                )"""
         )
+        try:
+            con.execute("ALTER TABLE escalations ADD COLUMN summary TEXT")
+        except sqlite3.OperationalError:
+            pass  # column already there
+    orders.setup(db)
 
 
-def log_escalation(session_id, order_id, reason, message):
+def log_escalation(session_id, order_id, reason, message, summary=""):
     with db() as con:
         con.execute(
-            "INSERT INTO escalations (ts, session_id, order_id, reason, message) VALUES (?,?,?,?,?)",
-            (datetime.now().strftime("%d %b %Y, %I:%M:%S %p"), session_id, order_id or "-", reason, message),
+            "INSERT INTO escalations (ts, session_id, order_id, reason, message, summary) VALUES (?,?,?,?,?,?)",
+            (datetime.now().strftime("%d %b %Y, %I:%M:%S %p"), session_id, order_id or "-", reason, message, summary),
         )
 
 
@@ -101,8 +108,7 @@ ORDER_ID_RE = re.compile(r"\b(?:(?:ORD|KRT|KR|OD)[- ]?)?(\d{5,12})\b", re.IGNORE
 
 
 def find_order_id(text):
-    m = ORDER_ID_RE.search(text.replace(",", ""))
-    return m.group(0).strip() if m else None
+    return orders.find_id(text)
 
 
 def best_entry(norm_text):
@@ -208,6 +214,56 @@ def ai_answer(message, history, lang="en"):
         return None
 
 
+# ---------------------------------------------------------------- orders (Case Detective + TrustGuard)
+CANCEL_WORDS = ["cancel my", "cancel order", "cancel this", "cancel it", "please cancel", "want to cancel", "need to cancel",
+                "cancel kar", "कैंसल कर", "रद्द करें", "रद्द कर दो", "रद्द करा", "रद्द करायची"]
+REFUND_WORDS = ["refund my", "refund me", "want a refund", "want refund", "need a refund", "request a refund", "initiate refund",
+                "please refund", "want to return", "return my", "return this", "return order", "रिफंड चाहिए", "रिटर्न करना है", "परतावा हवा"]
+STATUS_WORDS = ["where is my order", "where is order", "where is my package", "order status", "delivery status", "track", "tracking",
+                "not arrived", "when will my order", "kahan hai", "कहाँ है", "कहां है", "कुठे आहे"]
+REFUND_STATUS_WORDS = ["refund status", "where is my refund", "when will i get my refund", "status of my refund", "रिफंड कब", "परतावा कधी"]
+
+
+def make_summary(sess, reason):
+    """Case summary handed to the human specialist."""
+    o = orders.get(sess["order_id"]) if sess.get("order_id") else None
+    lines = []
+    if o:
+        lines.append(f"Order {o['id']} | {o['product']} | {o['status']} | {o['customer']}")
+    lines.append(f"Why: {reason}")
+    lines.append("Chat: " + " | ".join(f"{r}: {t}" for r, t in sess["history"][-4:]))
+    return "\n".join(lines)[:700]
+
+
+def handle_order(sess, raw, norm, oid, reply, lang="en"):
+    if not sess.get("order_id"):
+        return None
+    o = orders.get(sess["order_id"])
+    filler = {"order", "id", "number", "no", "my", "is", "the", "it", "ord", "for", "of", "krt", "kr", "od"}
+    leftover = " ".join(w for w in normalise(ORDER_ID_RE.sub("", raw)).split() if w not in filler) if oid else "x"
+    if o is None:
+        if oid and (not leftover or any_trigger(norm, CANCEL_WORDS + REFUND_WORDS + STATUS_WORDS)):
+            return reply(orders.tr("nf", lang, i=oid), topic="Order not found", out_lang=lang)
+        return None
+    card = {"order": {k: o[k] for k in ("id", "product", "status", "when")}, "action": None}
+    if any_trigger(norm, CANCEL_WORDS):
+        text, act, esc = orders.cancel(o, lang)
+    elif any_trigger(norm, REFUND_WORDS):
+        text, act, esc = orders.refund(o, lang)
+    elif any_trigger(norm, REFUND_STATUS_WORDS) and o["status"] in ("Return requested", "Refund under review", "Refund approved"):
+        text, esc = orders.describe(o, lang); act = None
+    elif any_trigger(norm, STATUS_WORDS) or (oid and not leftover):
+        text, esc = orders.describe(o, lang); act = None
+    else:
+        return None
+    if act:
+        o = orders.get(o["id"])
+        card = {"order": {k: o[k] for k in ("id", "product", "status", "when")}, "action": act}
+    if esc:
+        text = f"{text} {T('escalation', lang)}"
+    return reply(text, bool(esc), "Case Detective", reason=esc or "", out_lang=lang, card=card)
+
+
 # ---------------------------------------------------------------- core logic
 def respond(session_id, message, lang="en"):
     sess = SESSIONS.setdefault(session_id, {"order_id": None, "asked_order": False, "turns": 0, "history": []})
@@ -217,11 +273,11 @@ def respond(session_id, message, lang="en"):
     raw = message.strip()
     norm = normalise(raw)
 
-    def reply(text, escalated=False, topic="", mode="rules", reason="", out_lang=None):
+    def reply(text, escalated=False, topic="", mode="rules", reason="", out_lang=None, card=None):
         sess["history"].append(("Customer", raw))
         sess["history"].append(("Vera", text))
-        if escalated:
-            log_escalation(session_id, sess["order_id"], reason or topic, raw)
+        if escalated and not sess.get("dry"):
+            log_escalation(session_id, sess["order_id"], reason or topic, raw, make_summary(sess, reason or topic))
         return {
             "reply": text,
             "escalated": escalated,
@@ -229,25 +285,27 @@ def respond(session_id, message, lang="en"):
             "order_id": sess["order_id"],
             "mode": mode,
             "lang": out_lang or lang,
+            "card": card,
         }
 
     if not raw:
         return reply(T("unclear", lang), topic="Unclear")
 
-    # Order ID spoken or typed
+    # Order ID spoken or typed (remembered for the whole call)
     oid = find_order_id(raw)
     if oid:
         sess["order_id"] = oid
-        leftover = normalise(ORDER_ID_RE.sub("", raw).strip(" ,.-"))
-        only_id = best_entry(leftover)[0] is None and not any_trigger(leftover, KB["hard_escalation_triggers"])
-        if only_id:
-            return reply(T("noted", lang, oid=oid), topic="Order ID")
 
     # Safety first: human requests, legal threats, abuse
     if any_trigger(norm, KB["hard_escalation_triggers"]):
         return reply(ESC, True, "Escalation", reason="Customer asked for a human / legal or fraud issue")
     if any_trigger(norm, KB["abuse_words"]):
         return reply(ESC, True, "Escalation", reason="Abusive language")
+
+    # Case Detective: answer from the orders database, and only report actions the backend confirms
+    handled = handle_order(sess, raw, norm, oid, reply, lang)
+    if handled:
+        return handled
 
     # Small talk
     if any_trigger(norm, KB["bye_triggers"]):
@@ -258,7 +316,7 @@ def respond(session_id, message, lang="en"):
         return reply(T("greet", lang), topic="Greeting")
 
     # Optional AI brain
-    ai = ai_answer(raw, sess["history"], lang)
+    ai = None if sess.get("dry") else ai_answer(raw, sess["history"], lang)
     if ai:
         text, esc = ai
         if esc and ESC not in text:
@@ -292,6 +350,32 @@ def home():
 @app.get("/escalations")
 def escalations_page():
     return send_from_directory(app.static_folder, "escalations.html")
+
+
+@app.get("/arena")
+def arena_page():
+    return send_from_directory(app.static_folder, "arena.html")
+
+
+@app.post("/api/arena/run")
+def api_arena_run():
+    return jsonify(arena.run(respond, SESSIONS, orders))
+
+
+@app.get("/orders")
+def orders_page():
+    return send_from_directory(app.static_folder, "orders.html")
+
+
+@app.get("/api/orders")
+def api_orders():
+    return jsonify({"orders": orders.all_orders(), "actions": orders.all_actions()})
+
+
+@app.post("/api/orders/reset")
+def api_orders_reset():
+    orders.reset()
+    return jsonify({"ok": True})
 
 
 @app.post("/api/start")
